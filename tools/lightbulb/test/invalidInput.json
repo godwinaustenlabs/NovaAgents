@@ -1,0 +1,10 @@
+{
+  "id": "lightbulb",
+  "payload": {
+    "metadata": {
+      "channel": "cli",
+      "timestamp": "2025-08-14T10:00:00Z",
+      "language": "en"
+    }
+  }
+}

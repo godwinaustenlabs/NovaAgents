@@ -4,18 +4,21 @@ import {
 } from '../../NovaSystems/utils/validateNAS.js';
 
 /**
- * Wraps an agent's logic function with NAS input/output validation
- * @param {Function} agentLogic - async function that takes NAS input and returns NAS output
+ * Wraps an agent or tool logic function with NAS input/output validation
+ * Works for both Agents and Tools
+ * @param {Function} logicFn - async function that takes NAS input and returns NAS output
  * @returns {Function} - async function with validation before & after logic
  */
-export function withNASValidation(agentLogic) {
+export function withNASValidation(logicFn) {
   return async function (requestBody) {
+    const id = requestBody?.agent_id || requestBody?.id || 'unknown';
+
     // Validate NAS Input
     const inCheck = validateNASInput(requestBody);
     if (!inCheck.valid) {
       return {
         status: 'error',
-        agent_id: requestBody?.agent_id || 'unknown',
+        id,
         error: {
           code: 'INVALID_INPUT',
           message: inCheck.errors,
@@ -23,17 +26,17 @@ export function withNASValidation(agentLogic) {
       };
     }
 
-    // Run agent logic
+    // Run the logic
     let output;
     try {
-      output = await agentLogic(requestBody);
+      output = await logicFn(requestBody);
     } catch (err) {
       return {
         status: 'error',
-        agent_id: requestBody?.agent_id || 'unknown',
+        id,
         error: {
-          code: 'AGENT_LOGIC_ERROR',
-          message: err.message || 'Unknown error in agent logic',
+          code: 'LOGIC_ERROR',
+          message: err.message || 'Unknown error in logic',
         },
       };
     }
@@ -43,7 +46,7 @@ export function withNASValidation(agentLogic) {
     if (!outCheck.valid) {
       return {
         status: 'error',
-        agent_id: output?.agent_id || requestBody?.agent_id || 'unknown',
+        id: output?.agent_id || output?.id || id,
         error: {
           code: 'INVALID_OUTPUT',
           message: outCheck.errors,

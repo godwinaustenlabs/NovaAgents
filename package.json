@@ -42,5 +42,21 @@
     "*.{js,jsx,ts,tsx,cjs,mjs,json,css,scss,md,yml,yaml}": [
       "prettier --write"
     ]
-  }
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "node-fetch": "^3.3.2"
+  },
+  "description": "",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/godwinaustenlabs/NovaAgents.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/godwinaustenlabs/NovaAgents/issues"
+  },
+  "homepage": "https://github.com/godwinaustenlabs/NovaAgents#readme"
 }
